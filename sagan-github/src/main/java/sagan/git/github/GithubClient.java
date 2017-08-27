@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.expression.Expression;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.social.github.api.GitHub;
 import org.springframework.social.github.api.GitHubUser;
@@ -11,6 +12,7 @@ import sagan.git.GitClient;
 import sagan.git.GitUser;
 import sagan.projects.Project;
 import sagan.util.CachedRestClient;
+import sagan.util.GithubService;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -28,7 +30,7 @@ import static java.lang.String.format;
 @Slf4j
 public class GithubClient implements GitClient {
 
-    private static final String API_URL_BASE = "https://api.github.com";
+    private static final String API_URL_BASE = GithubService.API_URL_BASE;
 
     private final GitHub gitHub;
     private final CachedRestClient restClient;
@@ -69,6 +71,21 @@ public class GithubClient implements GitClient {
         } catch (RuntimeException | JsonProcessingException ex) {
             log.warn("Unable to POST new issue to " + projectIssuesUrl);
         }
+    }
+
+    @Override
+    public boolean hasPagesBranch(Project project) {
+        if (project.hasSite() && project.getSiteUrl().startsWith("http://projects.spring.io")) {
+            String ghPagesBranchUrl = format("%s/repos/%s/%s/branches/gh-pages",
+                API_URL_BASE, "spring-projects", project.getId());
+            try {
+                HttpHeaders headers = gitHub.restOperations().headForHeaders(ghPagesBranchUrl);
+                return "200 OK".equals(headers.getFirst("Status"));
+            } catch (Exception ex) {
+                // RestTemplate call above logs at WARN level if anything goes wrong
+            }
+        }
+        return false;
     }
 
 

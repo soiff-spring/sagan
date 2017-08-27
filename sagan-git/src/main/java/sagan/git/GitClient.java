@@ -16,5 +16,7 @@ import java.util.Map;
 public interface GitClient {
     GitUser[] getGitUsers(final String teamId);
     String getUserName(final String username);
-    void createIssue(final String org, Project project, ObjectMapper jsonMapper, Map<String, Object> root, Expression spel);
+    void createIssue(final String org, Project project, ObjectMapper jsonMapper,
+                     Map<String, Object> root, Expression spel);
+    boolean hasPagesBranch(final Project project);
 }

@@ -1,10 +1,8 @@
 package sagan.blog.support;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import sagan.support.github.GitHubClient;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sagan.util.GithubService;
 
 /**
  * A {@link MarkdownService} based on the GitHub Markdown rendering API.
@@ -12,11 +10,11 @@ import org.springframework.stereotype.Service;
 @Service
 class DefaultMarkdownService implements MarkdownService {
 
-    private final GitHubClient gitHub;
+    private final GithubService service;
 
     @Autowired
-    public DefaultMarkdownService(GitHubClient gitHub) {
-        this.gitHub = gitHub;
+    public DefaultMarkdownService(GithubService service) {
+        this.service = service;
     }
 
     /**
@@ -25,7 +23,7 @@ class DefaultMarkdownService implements MarkdownService {
      */
     @Override
     public String renderToHtml(String markdownSource) {
-        return gitHub.sendPostRequestForHtml("/markdown/raw", markdownSource);
+        return service.renderToHtml(markdownSource);
     }
 
 }
