@@ -1,19 +1,16 @@
 package sagan.team.support;
 
-import sagan.team.MemberProfile;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.social.github.api.GitHub;
 import org.springframework.social.github.api.GitHubUserProfile;
 import org.springframework.stereotype.Service;
+import sagan.git.GitClient;
+import sagan.git.GitUserProfile;
+import sagan.team.MemberProfile;
 
 @Service
 public class SignInService {
 
-    private static final String IS_MEMBER_URL = "https://api.github.com/teams/{team}/members/{user}";
     private final TeamService teamService;
     private final String gitHubTeamId;
 
@@ -23,16 +20,17 @@ public class SignInService {
         this.gitHubTeamId = gitHubTeamId;
     }
 
-    public MemberProfile getOrCreateMemberProfile(Long githubId, GitHub gitHub) {
-        GitHubUserProfile remoteProfile = gitHub.userOperations().getUserProfile();
+    public MemberProfile getOrCreateMemberProfile(Long githubId, GitClient gitHub) {
+        GitUserProfile profile = gitHub.getGitUserProfile();
+        GitHubUserProfile remoteProfile = new GitHubUserProfile(profile.getId(), profile.getUsername(),
+            profile.getName(), profile.getLocation(), profile.getCompany(), profile.getBlog(),
+            profile.getEmail(), profile.getProfileImageUrl(), profile.getCreatedDate());
 
         return teamService.createOrUpdateMemberProfile(githubId, remoteProfile.getUsername(), remoteProfile
-                .getProfileImageUrl(), remoteProfile.getName());
+            .getProfileImageUrl(), remoteProfile.getName());
     }
 
-    public boolean isSpringMember(String userId, GitHub gitHub) {
-        ResponseEntity<Void> response =
-                gitHub.restOperations().getForEntity(IS_MEMBER_URL, Void.class, gitHubTeamId, userId);
-        return response.getStatusCode() == HttpStatus.NO_CONTENT;
+    public boolean isSpringMember(String userId, GitClient gitHub) {
+        return gitHub.isMember(gitHubTeamId, userId);
     }
 }

@@ -2,6 +2,7 @@ package sagan.git.github;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -10,10 +11,7 @@ import org.springframework.social.github.api.GitHub;
 import org.springframework.social.github.api.impl.GitHubTemplate;
 import org.springframework.social.github.connect.GitHubConnectionFactory;
 import org.springframework.util.StringUtils;
-import sagan.git.DownloadConverter;
-import sagan.git.GitClient;
-import sagan.git.JsonStringConverter;
-import sagan.git.MarkdownHtmlConverter;
+import sagan.git.*;
 import sagan.util.CachedRestClient;
 
 import java.nio.charset.Charset;
@@ -55,6 +53,12 @@ public class GithubAutoConfiguration {
     @Bean
     public GitClient gitClient(final GitHub gitHub, final CachedRestClient cachedRestClient) {
         return new GithubClient(gitHub, cachedRestClient);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public GitClientBuilder<GitHub> gitHubGitClientBuilder(CachedRestClient client) {
+        return new GithubClientBuilder(client);
     }
 
     private static class GuideGitHubTemplate extends GitHubTemplate {

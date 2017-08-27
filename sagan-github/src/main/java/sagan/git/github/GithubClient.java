@@ -5,12 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.expression.Expression;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.social.github.api.GitHub;
 import org.springframework.social.github.api.GitHubUser;
+import org.springframework.social.github.api.GitHubUserProfile;
 import org.springframework.web.util.UriTemplate;
 import sagan.git.GitClient;
 import sagan.git.GitUser;
+import sagan.git.GitUserProfile;
 import sagan.git.MarkdownHtml;
 import sagan.projects.Project;
 import sagan.util.CachedRestClient;
@@ -33,6 +36,7 @@ import static java.lang.String.format;
 public class GithubClient implements GitClient {
 
     private static final String API_URL_BASE = GithubService.API_URL_BASE;
+    private static final String IS_MEMBER_URL = "https://api.github.com/teams/{team}/members/{user}";
 
     private final GitHub gitHub;
     private final CachedRestClient restClient;
@@ -48,6 +52,20 @@ public class GithubClient implements GitClient {
         ResponseEntity<GitHubUser[]> entity =
             gitHub.restOperations().getForEntity(membersUrl, GitHubUser[].class, teamId);
         return GitHubUserToGitUser.convert(entity.getBody());
+    }
+
+    @Override
+    public GitUserProfile getGitUserProfile() {
+        final GitHubUserProfile profile = gitHub.userOperations().getUserProfile();
+        return new GitUserProfile(profile.getId(), profile.getUsername(), profile.getName(),
+            profile.getLocation(), profile.getCompany(), profile.getBlog(), profile.getEmail(),
+            profile.getProfileImageUrl(), profile.getCreatedDate());
+    }
+
+    @Override
+    public boolean isMember(String team, String user) {
+        return gitHub.restOperations().getForEntity(IS_MEMBER_URL, Void.class, team, user)
+            .getStatusCode() == HttpStatus.NO_CONTENT;
     }
 
     @Override

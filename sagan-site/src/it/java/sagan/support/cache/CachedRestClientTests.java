@@ -18,6 +18,7 @@ import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 import sagan.SiteApplication;
+import sagan.git.GitClient;
 import sagan.support.Fixtures;
 import sagan.support.SetSystemProperty;
 import sagan.support.cache.CachedRestClientTests.TestConfig;
@@ -75,7 +76,7 @@ public class CachedRestClientTests {
     }
 
     @Autowired
-    private GitHub gitHub;
+    private GitClient gitHub;
 
     @Autowired
     private CacheManager cacheManager;
@@ -92,9 +93,8 @@ public class CachedRestClientTests {
         String requestPath = "https://api.github.com/orgs/spring-guides/repos";
 
         restOperations = mock(RestOperations.class);
-        given(gitHub.restOperations()).willReturn(restOperations);
         given(restOperations.getForObject(
-                startsWith(requestPath), (Class<String>) anyObject())).willReturn(Fixtures.githubRepoListJson());
+            startsWith(requestPath), (Class<String>) anyObject())).willReturn(Fixtures.githubRepoListJson());
     }
 
     @After
@@ -126,9 +126,9 @@ public class CachedRestClientTests {
     public void toolsSTSXmlRequestsAreCached() throws Exception {
         String stsDownloads = Fixtures.load("/fixtures/tools/sts_downloads.xml");
         given(
-                restTemplate.getForObject(
-                        "http://dist.springsource.com/release/STS/index-new.xml",
-                        String.class)).willReturn(stsDownloads);
+            restTemplate.getForObject(
+                "http://dist.springsource.com/release/STS/index-new.xml",
+                String.class)).willReturn(stsDownloads);
 
         mockMvc.perform(get("/tools")).andExpect(status().isOk());
         mockMvc.perform(get("/tools")).andExpect(status().isOk());
@@ -140,9 +140,9 @@ public class CachedRestClientTests {
     public void toolsEclipseXmlRequestsAreCached() throws Exception {
         String eclipse = Fixtures.load("/fixtures/tools/eclipse.xml");
         given(
-                restTemplate.getForObject(
-                        "http://dist.springsource.com/release/STS/eclipse.xml",
-                        String.class)).willReturn(eclipse);
+            restTemplate.getForObject(
+                "http://dist.springsource.com/release/STS/eclipse.xml",
+                String.class)).willReturn(eclipse);
 
         mockMvc.perform(get("/tools/eclipse")).andExpect(status().isOk());
         mockMvc.perform(get("/tools/eclipse")).andExpect(status().isOk());

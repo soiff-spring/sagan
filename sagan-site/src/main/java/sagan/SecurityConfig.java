@@ -1,16 +1,5 @@
 package sagan;
 
-import sagan.team.MemberProfile;
-import sagan.team.support.SignInService;
-
-import java.io.IOException;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
@@ -47,12 +36,23 @@ import org.springframework.social.connect.support.ConnectionFactoryRegistry;
 import org.springframework.social.connect.web.ProviderSignInController;
 import org.springframework.social.connect.web.SignInAdapter;
 import org.springframework.social.github.api.GitHub;
-import org.springframework.social.github.api.GitHubUserProfile;
 import org.springframework.social.github.api.impl.GitHubTemplate;
 import org.springframework.social.github.connect.GitHubConnectionFactory;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.filter.OncePerRequestFilter;
+import sagan.git.GitClient;
+import sagan.git.GitClientBuilder;
+import sagan.git.GitUserProfile;
+import sagan.team.MemberProfile;
+import sagan.team.support.SignInService;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Site-wide web security configuration.
@@ -70,9 +70,9 @@ class SecurityConfig {
         protected void configure(HttpSecurity http) throws Exception {
             configureHeaders(http.headers());
             http.requestMatchers().antMatchers("/signin/**", "/blog/**").and()
-                    .addFilterBefore(authenticationFilter(),
-                            AnonymousAuthenticationFilter.class).anonymous().and().csrf()
-                    .disable();
+                .addFilterBefore(authenticationFilter(),
+                    AnonymousAuthenticationFilter.class).anonymous().and().csrf()
+                .disable();
         }
 
         // Not a @Bean because we explicitly do not want it added automatically by
@@ -80,9 +80,9 @@ class SecurityConfig {
         protected Filter authenticationFilter() {
 
             AbstractAuthenticationProcessingFilter filter =
-                    new SecurityContextAuthenticationFilter(SIGNIN_SUCCESS_PATH);
+                new SecurityContextAuthenticationFilter(SIGNIN_SUCCESS_PATH);
             SavedRequestAwareAuthenticationSuccessHandler successHandler =
-                    new SavedRequestAwareAuthenticationSuccessHandler();
+                new SavedRequestAwareAuthenticationSuccessHandler();
             successHandler.setDefaultTargetUrl("/admin");
             filter.setAuthenticationSuccessHandler(successHandler);
             return filter;
@@ -92,10 +92,13 @@ class SecurityConfig {
     @Configuration
     @Order(Ordered.LOWEST_PRECEDENCE - 80)
     protected static class ApiAuthenticationConfig extends WebSecurityConfigurerAdapter implements
-            EnvironmentAware {
+        EnvironmentAware {
 
         @Autowired
         private SignInService signInService;
+
+        @Autowired
+        private GitClientBuilder<GitHub> builder;
 
         private Environment environment;
 
@@ -108,12 +111,12 @@ class SecurityConfig {
         protected void configure(HttpSecurity http) throws Exception {
             configureHeaders(http.headers());
             http.requestMatchers().antMatchers("/project_metadata/**")
-                    .and().authorizeRequests().antMatchers(HttpMethod.HEAD, "/project_metadata/*").permitAll()
-                    .antMatchers(HttpMethod.GET, "/project_metadata/*").permitAll()
-                    .anyRequest().authenticated()
-                    .and()
-                    .addFilterAfter(githubBasicAuthFilter(), BasicAuthenticationFilter.class)
-                    .csrf().disable();
+                .and().authorizeRequests().antMatchers(HttpMethod.HEAD, "/project_metadata/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/project_metadata/*").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .addFilterAfter(githubBasicAuthFilter(), BasicAuthenticationFilter.class)
+                .csrf().disable();
             if (isForceHttps()) {
                 http.requiresChannel().anyRequest().requiresSecure();
             }
@@ -129,10 +132,10 @@ class SecurityConfig {
                 @Override
                 public Authentication authenticate(Authentication input) throws AuthenticationException {
 
-                    GitHubTemplate gitHub = new GitHubTemplate(input.getName());
-                    GitHubUserProfile userInfo = null;
+                    GitClient gitHub = builder.build(new GitHubTemplate(input.getName()));
+                    GitUserProfile userInfo = null;
                     try {
-                        userInfo = gitHub.userOperations().getUserProfile();
+                        userInfo = gitHub.getGitUserProfile();
                     } catch (Exception e) {
                         throw new BadCredentialsException("Cannot authenticate");
                     }
@@ -142,8 +145,8 @@ class SecurityConfig {
 
                     MemberProfile member = signInService.getOrCreateMemberProfile(new Long(userInfo.getId()), gitHub);
                     Authentication authentication = new UsernamePasswordAuthenticationToken(
-                            member.getId(), member.getGithubUsername(),
-                            AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER"));
+                        member.getId(), member.getGithubUsername(),
+                        AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER"));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     return authentication;
 
@@ -161,7 +164,7 @@ class SecurityConfig {
     @Configuration
     @Order(Ordered.LOWEST_PRECEDENCE - 90)
     protected static class AdminAuthenticationConfig extends WebSecurityConfigurerAdapter implements
-            EnvironmentAware {
+        EnvironmentAware {
 
         @Autowired
         private SignInService signInService;
@@ -177,24 +180,24 @@ class SecurityConfig {
         protected void configure(HttpSecurity http) throws Exception {
             configureHeaders(http.headers());
             http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
-                    .and().requestMatchers().antMatchers("/admin/**", "/signout").and()
-                    .addFilterAfter(new OncePerRequestFilter() {
+                .and().requestMatchers().antMatchers("/admin/**", "/signout").and()
+                .addFilterAfter(new OncePerRequestFilter() {
 
-                        // TODO this filter needs to be removed once basic auth is removed
-                        @Override
-                        protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                                        FilterChain filterChain) throws ServletException, IOException {
-                            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                            if (authentication == null || !authentication.isAuthenticated()
-                                    || !(authentication.getPrincipal() instanceof Long)) {
-                                throw new BadCredentialsException("Not a github user!");
-                            }
-                            filterChain.doFilter(request, response);
+                    // TODO this filter needs to be removed once basic auth is removed
+                    @Override
+                    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                                    FilterChain filterChain) throws ServletException, IOException {
+                        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                        if (authentication == null || !authentication.isAuthenticated()
+                            || !(authentication.getPrincipal() instanceof Long)) {
+                            throw new BadCredentialsException("Not a github user!");
                         }
-                    }, ExceptionTranslationFilter.class);
+                        filterChain.doFilter(request, response);
+                    }
+                }, ExceptionTranslationFilter.class);
             http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/signout"))
-                    .logoutSuccessUrl("/").and().authorizeRequests().anyRequest()
-                    .authenticated();
+                .logoutSuccessUrl("/").and().authorizeRequests().anyRequest()
+                .authenticated();
             if (isForceHttps()) {
                 http.requiresChannel().anyRequest().requiresSecure();
             }
@@ -213,13 +216,14 @@ class SecurityConfig {
         @Bean
         public ProviderSignInController providerSignInController(GitHubConnectionFactory connectionFactory,
                                                                  ConnectionFactoryRegistry registry,
-                                                                 InMemoryUsersConnectionRepository repository) {
+                                                                 InMemoryUsersConnectionRepository repository,
+                                                                 GitClientBuilder<GitHub> builder) {
 
             registry.addConnectionFactory(connectionFactory);
             repository.setConnectionSignUp(new RemoteUsernameConnectionSignUp());
             ProviderSignInController controller =
-                    new ProviderSignInController(registry, repository, new GithubAuthenticationSigninAdapter(
-                            SIGNIN_SUCCESS_PATH, signInService));
+                new ProviderSignInController(registry, repository, new GithubAuthenticationSigninAdapter(
+                    SIGNIN_SUCCESS_PATH, signInService, builder));
             controller.setSignInUrl("/signin?error=access_denied");
             return controller;
         }
@@ -239,7 +243,7 @@ class SecurityConfig {
         HstsHeaderWriter writer = new HstsHeaderWriter(false);
         writer.setRequestMatcher(AnyRequestMatcher.INSTANCE);
         headers.contentTypeOptions().and().xssProtection()
-                .and().cacheControl().and().addHeaderWriter(writer).frameOptions();
+            .and().cacheControl().and().addHeaderWriter(writer).frameOptions();
     }
 
     /**
@@ -262,7 +266,7 @@ class SecurityConfig {
 
         @Override
         public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-                throws AuthenticationException, IOException, ServletException {
+            throws AuthenticationException, IOException, ServletException {
             return SecurityContextHolder.getContext().getAuthentication();
         }
     }
@@ -282,15 +286,17 @@ class SecurityConfig {
 
         private String path;
         private final SignInService signInService;
+        private final GitClientBuilder<GitHub> builder;
 
-        public GithubAuthenticationSigninAdapter(String path, SignInService signInService) {
+        public GithubAuthenticationSigninAdapter(String path, SignInService signInService, GitClientBuilder<GitHub> builder) {
             this.path = path;
             this.signInService = signInService;
+            this.builder = builder;
         }
 
         @Override
         public String signIn(String githubId, Connection<?> connection, NativeWebRequest request) {
-            GitHub gitHub = (GitHub) connection.getApi();
+            GitClient gitHub = builder.build((GitHub) connection.getApi());
             String githubUsername = connection.getDisplayName();
 
             try {
@@ -300,8 +306,8 @@ class SecurityConfig {
 
                 MemberProfile member = signInService.getOrCreateMemberProfile(new Long(githubId), gitHub);
                 Authentication authentication = new UsernamePasswordAuthenticationToken(
-                        member.getId(), member.getGithubUsername(),
-                        AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER"));
+                    member.getId(), member.getGithubUsername(),
+                    AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER"));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 return path;
 

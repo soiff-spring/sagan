@@ -2,7 +2,6 @@ package sagan.team.support;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.social.github.api.GitHub;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sagan.git.GitClient;
@@ -27,7 +26,7 @@ public class DefaultTeamImporter implements TeamImporter {
     }
 
     @Transactional
-    public void importTeamMembers(GitHub gitHub) {
+    public void importTeamMembers(GitClient gitHub) {
         GitUser[] users = client.getGitUsers(gitHubTeamId);
         List<Long> userIds = new ArrayList<>();
         for (GitUser user : users) {

@@ -1,20 +1,17 @@
 package sagan.team.support;
 
-import sagan.support.Fixtures;
-import sagan.team.MemberProfile;
-import saganx.AbstractIntegrationTests;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.social.github.api.GitHub;
 import org.springframework.social.github.api.GitHubUser;
 import org.springframework.web.client.RestOperations;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import sagan.git.GitClient;
+import sagan.support.Fixtures;
+import sagan.team.MemberProfile;
+import saganx.AbstractIntegrationTests;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -29,14 +26,13 @@ public class ImportTeamFromGithubTests extends AbstractIntegrationTests {
     @Autowired
     private TeamImporter teamImporter;
 
-    private GitHub gitHub = mock(GitHub.class);
+    private GitClient gitHub = mock(GitClient.class);
 
     private ObjectMapper mapper = new ObjectMapper();
 
     @Before
     public void setUp() throws Exception {
         RestOperations restOperations = mock(RestOperations.class);
-        given(gitHub.restOperations()).willReturn(restOperations);
 
         String membersJson = Fixtures.load("/fixtures/github/ghTeamInfo.json");
         GitHubUser[] gitHubUsers = mapper.readValue(membersJson, GitHubUser[].class);

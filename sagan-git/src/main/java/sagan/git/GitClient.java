@@ -16,6 +16,10 @@ import java.util.Map;
 public interface GitClient {
     GitUser[] getGitUsers(final String teamId);
 
+    GitUserProfile getGitUserProfile();
+
+    boolean isMember(final String team, final String user);
+
     String getUserName(final String username);
 
     void createIssue(final String org, Project project, final ObjectMapper jsonMapper,

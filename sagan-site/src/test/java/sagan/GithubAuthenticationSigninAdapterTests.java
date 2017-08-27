@@ -43,7 +43,7 @@ public class GithubAuthenticationSigninAdapterTests {
 
     @Before
     public void setup() {
-        adapter = new GithubAuthenticationSigninAdapter("/foo", signInService);
+        adapter = new GithubAuthenticationSigninAdapter("/foo", signInService, builder);
     }
 
     @After
