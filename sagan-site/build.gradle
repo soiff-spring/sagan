@@ -54,6 +54,7 @@ dependencies {
     // for use in mocking http interactions
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc"
     testCompile "org.springframework.boot:spring-boot-starter-test"
+    testCompile project(':sagan-github')
 
     // pick up common test utility classes
     testCompile project(':sagan-common').sourceSets.testUtil.output

@@ -1,25 +1,24 @@
 package sagan.guides.support;
 
-import sagan.support.Fixtures;
-import sagan.support.github.GitHubClient;
-
-import java.util.List;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import org.springframework.social.github.api.GitHubRepo;
+import sagan.git.GitClient;
+import sagan.support.Fixtures;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.anyVararg;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GuidesOrgTests {
@@ -28,7 +27,7 @@ public class GuidesOrgTests {
     private static final String OWNER_NAME = "my-org";
 
     @Mock
-    private GitHubClient ghClient;
+    private GitClient ghClient;
     private GuideOrganization service;
 
     @Before

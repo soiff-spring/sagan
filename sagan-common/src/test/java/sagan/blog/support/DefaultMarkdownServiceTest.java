@@ -1,29 +1,33 @@
 package sagan.blog.support;
 
-import sagan.support.github.GitHubClient;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import sagan.git.GitClient;
+import sagan.util.GithubService;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultMarkdownServiceTest {
 
     @Mock
-    GitHubClient gitHub;
+    GitClient gitHub;
+
+    @Mock
+    GithubService githubService;
 
     private MarkdownService service;
 
     @Before
     public void setUp() throws Exception {
-        service = new DefaultMarkdownService(gitHub);
+        service = new DefaultMarkdownService(githubService);
     }
 
     @Test

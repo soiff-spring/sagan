@@ -2,6 +2,7 @@ dependencies {
     compile 'org.springframework:spring-context'
     compile 'org.springframework:spring-web'
     compile 'org.springframework.data:spring-data-jpa'
+    compile 'org.springframework.boot:spring-boot-autoconfigure'
 
     compile 'org.slf4j:slf4j-api'
     compile 'org.hibernate:hibernate-validator'

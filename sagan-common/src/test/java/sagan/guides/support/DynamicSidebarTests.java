@@ -1,19 +1,16 @@
 package sagan.guides.support;
 
-import sagan.support.github.GitHubClient;
-
-import java.io.IOException;
-import java.io.InputStream;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
-
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.util.StreamUtils;
+import sagan.git.GitClient;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.io.InputStream;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -26,7 +23,7 @@ public class DynamicSidebarTests {
     private static final String README_REST_ZIPBALL = "/repos/spring-guides/gs-rest-service/zipball";
 
     @Mock
-    GitHubClient github;
+    GitClient github;
 
     GuideOrganization org;
 
@@ -39,7 +36,7 @@ public class DynamicSidebarTests {
     @Test
     public void loadGuideContentWithCategories() throws IOException {
         InputStream inputStream =
-                new DefaultResourceLoader().getResource("classpath:/gs-rest-service-with-tags.zip").getInputStream();
+            new DefaultResourceLoader().getResource("classpath:/gs-rest-service-with-tags.zip").getInputStream();
         byte[] zipContents = StreamUtils.copyToByteArray(inputStream);
         inputStream.close();
 
@@ -53,17 +50,17 @@ public class DynamicSidebarTests {
         assertThat(guide.getTableOfContents(), startsWith("<ul class=\"sectlevel1\">"));
         assertThat(guide.getTableOfContents(), not(containsString("<ul class=\"sectlevel2\">")));
         assertThat(guide.getUnderstandingDocs().keySet(), hasItems("/understanding/JSON", "/understanding/WAR",
-                "/understanding/view-templates", "/understanding/application-context", "/understanding/REST",
-                "/understanding/Tomcat"));
+            "/understanding/view-templates", "/understanding/application-context", "/understanding/REST",
+            "/understanding/Tomcat"));
         assertThat(guide.getUnderstandingDocs().values(), hasItems("JSON", "WAR", "View Technology",
-                "Spring Application Context", "RESTful Web Service", "Tomcat"));
+            "Spring Application Context", "RESTful Web Service", "Tomcat"));
         assertThat(guide.getContent(), containsString("About 15 minutes"));
     }
 
     @Test
     public void loadGuideContentWithoutCategories() throws IOException {
         InputStream inputStream =
-                new DefaultResourceLoader().getResource("classpath:/gs-rest-service-without-tags.zip").getInputStream();
+            new DefaultResourceLoader().getResource("classpath:/gs-rest-service-without-tags.zip").getInputStream();
         byte[] zipContents = StreamUtils.copyToByteArray(inputStream);
         inputStream.close();
 
@@ -81,8 +78,8 @@ public class DynamicSidebarTests {
     @Test
     public void loadGuideContentWithoutCategoriesOrTableOfContents() throws IOException {
         InputStream inputStream =
-                new DefaultResourceLoader().getResource("classpath:/gs-rest-service-no-tags-no-toc.zip")
-                        .getInputStream();
+            new DefaultResourceLoader().getResource("classpath:/gs-rest-service-no-tags-no-toc.zip")
+                .getInputStream();
         byte[] zipContents = StreamUtils.copyToByteArray(inputStream);
         inputStream.close();
 
@@ -99,8 +96,8 @@ public class DynamicSidebarTests {
     @Test
     public void loadGuideWithCategoriesAndProjects() throws IOException {
         InputStream inputStream =
-                new DefaultResourceLoader().getResource("classpath:/gs-rest-service-with-tags-and-projects.zip")
-                        .getInputStream();
+            new DefaultResourceLoader().getResource("classpath:/gs-rest-service-with-tags-and-projects.zip")
+                .getInputStream();
         byte[] zipContents = StreamUtils.copyToByteArray(inputStream);
         inputStream.close();
 
@@ -114,10 +111,10 @@ public class DynamicSidebarTests {
         assertThat(guide.getTableOfContents(), startsWith("<ul class=\"sectlevel1\">"));
         assertThat(guide.getTableOfContents(), not(containsString("<ul class=\"sectlevel2\">")));
         assertThat(guide.getUnderstandingDocs().keySet(), hasItems("/understanding/JSON", "/understanding/WAR",
-                "/understanding/view-templates", "/understanding/application-context", "/understanding/REST",
-                "/understanding/Tomcat"));
+            "/understanding/view-templates", "/understanding/application-context", "/understanding/REST",
+            "/understanding/Tomcat"));
         assertThat(guide.getUnderstandingDocs().values(), hasItems("JSON", "WAR", "View Technology",
-                "Spring Application Context", "RESTful Web Service", "Tomcat"));
+            "Spring Application Context", "RESTful Web Service", "Tomcat"));
         assertThat(guide.getContent(), containsString("About 15 minutes"));
     }
 

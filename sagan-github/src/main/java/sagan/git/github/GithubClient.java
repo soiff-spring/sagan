@@ -8,8 +8,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.social.github.api.GitHub;
 import org.springframework.social.github.api.GitHubUser;
+import org.springframework.web.util.UriTemplate;
 import sagan.git.GitClient;
 import sagan.git.GitUser;
+import sagan.git.MarkdownHtml;
 import sagan.projects.Project;
 import sagan.util.CachedRestClient;
 import sagan.util.GithubService;
@@ -88,5 +90,29 @@ public class GithubClient implements GitClient {
         return false;
     }
 
+    public String sendRequestForJson(String path, Object... uriVariables) {
+        String url = resolveUrl(path, uriVariables);
+        return restClient.get(gitHub.restOperations(), url, String.class);
+    }
 
+    public byte[] sendRequestForDownload(String path, Object... uriVariables) {
+        String url = resolveUrl(path, uriVariables);
+        return restClient.get(gitHub.restOperations(), url, byte[].class);
+    }
+
+    public String sendRequestForHtml(String path, Object... uriVariables) {
+        String url = resolveUrl(path, uriVariables);
+        MarkdownHtml markdownHtml = restClient.get(gitHub.restOperations(), url, MarkdownHtml.class);
+        return markdownHtml.toString();
+    }
+
+    public String sendPostRequestForHtml(String path, String body, Object... uriVariables) {
+        String url = resolveUrl(path, uriVariables);
+        return restClient.post(gitHub.restOperations(), url, String.class, body);
+    }
+
+    private String resolveUrl(String path, Object[] uriVariables) {
+        String expandedPath = new UriTemplate(path).expand(uriVariables).toString();
+        return API_URL_BASE + expandedPath;
+    }
 }

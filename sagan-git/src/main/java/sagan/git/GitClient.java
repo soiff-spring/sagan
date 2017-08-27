@@ -15,8 +15,20 @@ import java.util.Map;
  */
 public interface GitClient {
     GitUser[] getGitUsers(final String teamId);
+
     String getUserName(final String username);
-    void createIssue(final String org, Project project, ObjectMapper jsonMapper,
-                     Map<String, Object> root, Expression spel);
+
+    void createIssue(final String org, Project project, final ObjectMapper jsonMapper,
+                     final Map<String, Object> root, final Expression spel);
+
     boolean hasPagesBranch(final Project project);
+
+    String sendRequestForJson(String path, Object... uriVariables);
+
+    byte[] sendRequestForDownload(String path, Object... uriVariables);
+
+    String sendRequestForHtml(String path, Object... uriVariables);
+
+    String sendPostRequestForHtml(String path, String body, Object... uriVariables);
+
 }
