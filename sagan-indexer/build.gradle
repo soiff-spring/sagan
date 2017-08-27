@@ -3,6 +3,7 @@ springBoot.mainClass = 'sagan.IndexerApplication'
 
 dependencies {
     compile project(':sagan-common')
+    compile project(':sagan-github')
 
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-actuator"

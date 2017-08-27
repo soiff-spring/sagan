@@ -1,5 +1,7 @@
 ## Sagan: the spring.io site and reference application
 
+**!!!We are looking for teammates to refactor [spring-sagan](https://github.com/spring-io/sagan) to support both [github](https://github.com) and [gitlab](https://gitlab.com). We are pleased if you are interest in doing such a great job!**
+
 #### Latest production deployment [![Build Status](https://travis-ci.org/spring-io/sagan.svg?branch=master)](https://travis-ci.org/spring-io/sagan)
 
 Welcome! The code in the master branch of this repository is deployed and running right now at [spring.io](http://spring.io). The [blog][], the collection of [guides][], and everything else you see there is implemented right here.

@@ -6,6 +6,7 @@ sourceSets {
 }
 
 dependencies {
+    compile project(':sagan-git')
 
     compile 'org.springframework:spring-context'
     compile 'org.springframework.security:spring-security-core'
