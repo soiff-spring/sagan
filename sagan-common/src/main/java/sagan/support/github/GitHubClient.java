@@ -1,6 +1,6 @@
 package sagan.support.github;
 
-import sagan.support.cache.CachedRestClient;
+import sagan.util.CachedRestClient;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.github.api.GitHub;

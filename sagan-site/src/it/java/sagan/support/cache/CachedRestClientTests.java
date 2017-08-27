@@ -1,17 +1,7 @@
 package sagan.support.cache;
 
-import sagan.SiteApplication;
-import sagan.support.Fixtures;
-import sagan.support.SetSystemProperty;
-import sagan.support.cache.CachedRestClientTests.TestConfig;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.ConfigFileApplicationContextInitializer;
 import org.springframework.cache.CacheManager;
@@ -27,6 +17,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
+import sagan.SiteApplication;
+import sagan.support.Fixtures;
+import sagan.support.SetSystemProperty;
+import sagan.support.cache.CachedRestClientTests.TestConfig;
+import sagan.util.CachedRestClient;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyObject;

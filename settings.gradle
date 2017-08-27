@@ -1,7 +1,3 @@
 rootProject.name = 'sagan'
 
-include 'sagan-common', 'sagan-site', 'sagan-indexer', 'sagan-client'
-include 'sagan-github'
-include 'sagan-git'
-include 'sagan-gitlab'
-
+include 'sagan-common', 'sagan-site', 'sagan-indexer', 'sagan-git', 'sagan-github', 'sagan-gitlab', 'sagan-client'

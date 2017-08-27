@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-import sagan.support.cache.CachedRestClient;
+import sagan.util.CachedRestClient;
 
 @Component
 class StackOverflowClient {

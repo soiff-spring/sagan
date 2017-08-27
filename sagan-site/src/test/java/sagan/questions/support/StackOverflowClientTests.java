@@ -3,7 +3,7 @@ package sagan.questions.support;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
-import sagan.support.cache.CachedRestClient;
+import sagan.util.CachedRestClient;
 
 import java.util.Collections;
 import java.util.List;

@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.web.client.RestTemplate;
 import sagan.support.Fixtures;
-import sagan.support.cache.CachedRestClient;
+import sagan.util.CachedRestClient;
 import sagan.tools.DownloadLink;
 import sagan.tools.EclipseVersion;
 import sagan.tools.ToolSuiteDownloads;

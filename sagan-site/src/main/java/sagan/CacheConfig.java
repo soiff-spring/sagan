@@ -1,18 +1,6 @@
 package sagan;
 
-import sagan.blog.support.BlogService;
-import sagan.guides.support.GettingStartedGuides;
-import sagan.guides.support.Topicals;
-import sagan.guides.support.Tutorials;
-import sagan.guides.support.UnderstandingDocs;
-import sagan.support.cache.CachedRestClient;
-import sagan.support.cache.JsonRedisTemplate;
-import sagan.support.cache.RedisCacheManager;
-import sagan.team.support.TeamService;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -23,8 +11,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import sagan.blog.support.BlogService;
+import sagan.guides.support.GettingStartedGuides;
+import sagan.guides.support.Topicals;
+import sagan.guides.support.Tutorials;
+import sagan.guides.support.UnderstandingDocs;
+import sagan.support.cache.JsonRedisTemplate;
+import sagan.support.cache.RedisCacheManager;
+import sagan.team.support.TeamService;
+import sagan.util.CachedRestClient;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableCaching(proxyTargetClass = true)

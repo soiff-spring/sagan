@@ -4,7 +4,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import sagan.support.cache.CachedRestClient;
+import sagan.util.CachedRestClient;
 import sagan.tools.EclipseDownloads;
 import sagan.tools.ToolSuiteDownloads;
 
