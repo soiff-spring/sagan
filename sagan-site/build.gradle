@@ -24,6 +24,8 @@ jar {
 dependencies {
     compile project(':sagan-common')
     compile project(':sagan-client')
+    // temporily use :sagan-github
+    compile project(':sagan-github')
 
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-actuator"
