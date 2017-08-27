@@ -5,13 +5,12 @@ import org.junit.Test;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.springframework.social.github.api.GitHubRepo;
-import org.springframework.util.Assert;
 import org.springframework.web.client.RestClientException;
 import sagan.guides.GettingStartedGuide;
 import sagan.guides.Guide;
 import sagan.projects.support.ProjectMetadataService;
 import sagan.support.ResourceNotFoundException;
-import sagan.support.github.Readme;
+import sagan.git.Readme;
 
 import java.io.IOException;
 import java.util.HashMap;

@@ -1,6 +1,5 @@
 package sagan;
 
-import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeDialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
@@ -26,7 +25,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.resource.ResourceUrlEncodingFilter;
 import org.springframework.web.servlet.resource.VersionResourceResolver;
 import org.springframework.web.util.UrlPathHelper;
-import sagan.projects.support.ProjectMetadataService;
 import sagan.support.ResourceNotFoundException;
 import sagan.support.StaticPagePathFinder;
 import sagan.support.nav.Navigation;

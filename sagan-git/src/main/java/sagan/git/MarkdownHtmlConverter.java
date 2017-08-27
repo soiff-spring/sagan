@@ -1,4 +1,4 @@
-package sagan.support.github;
+package sagan.git;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

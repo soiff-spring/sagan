@@ -1,7 +1,7 @@
 package sagan.guides.support;
 
 import sagan.guides.UnderstandingDoc;
-import sagan.support.github.RepoContent;
+import sagan.git.RepoContent;
 
 import java.util.ArrayList;
 import java.util.List;

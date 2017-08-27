@@ -6,7 +6,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import sagan.guides.*;
 import sagan.support.ResourceNotFoundException;
-import sagan.support.github.RepoContent;
+import sagan.git.RepoContent;
 
 import java.util.List;
 import java.util.stream.Collectors;

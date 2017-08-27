@@ -6,7 +6,7 @@ import org.mockito.Answers;
 import org.mockito.Mock;
 import org.springframework.social.github.api.GitHubRepo;
 import sagan.guides.Tutorial;
-import sagan.support.github.Readme;
+import sagan.git.Readme;
 
 import java.io.IOException;
 import java.util.HashMap;

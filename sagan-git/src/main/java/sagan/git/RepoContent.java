@@ -1,4 +1,4 @@
-package sagan.support.github;
+package sagan.git;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

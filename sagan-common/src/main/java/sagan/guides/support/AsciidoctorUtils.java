@@ -3,7 +3,7 @@ package sagan.guides.support;
 import sagan.projects.Project;
 import sagan.projects.support.ProjectMetadataService;
 import sagan.support.ResourceNotFoundException;
-import sagan.support.github.Readme;
+import sagan.git.Readme;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

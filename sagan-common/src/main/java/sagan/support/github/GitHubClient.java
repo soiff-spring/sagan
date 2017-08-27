@@ -1,5 +1,6 @@
 package sagan.support.github;
 
+import sagan.git.MarkdownHtml;
 import sagan.util.CachedRestClient;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,8 @@
 package sagan.guides.support;
 
 import sagan.support.github.GitHubClient;
-import sagan.support.github.Readme;
-import sagan.support.github.RepoContent;
+import sagan.git.Readme;
+import sagan.git.RepoContent;
 
 import java.io.BufferedReader;
 import java.io.File;

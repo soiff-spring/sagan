@@ -1,6 +1,9 @@
 dependencies {
     compile project(':sagan-git')
     compile 'org.springframework.social:spring-social-github:1.0.0.M4'
+    compile 'org.springframework.boot:spring-boot-autoconfigure'
+
+    compileOnly 'org.projectlombok:lombok'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

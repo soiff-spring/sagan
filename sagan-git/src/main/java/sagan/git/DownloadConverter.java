@@ -1,8 +1,4 @@
-package sagan.support.github;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
+package sagan.git;
 
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
@@ -11,6 +7,10 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.util.StreamUtils;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 public class DownloadConverter implements HttpMessageConverter<byte[]> {
 

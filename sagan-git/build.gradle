@@ -1,5 +1,16 @@
 dependencies {
     compile 'org.springframework:spring-context'
     compile 'org.springframework:spring-web'
+    compile 'org.springframework.data:spring-data-jpa'
+
+    compile 'org.slf4j:slf4j-api'
+    compile 'org.hibernate:hibernate-validator'
+    compile 'org.hibernate:hibernate-core'
+
+    // jackson
+    compile "com.fasterxml.jackson.core:jackson-databind"
+
+    compileOnly 'org.projectlombok:lombok'
+
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
